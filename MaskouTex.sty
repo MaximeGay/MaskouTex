@@ -1,0 +1,2060 @@
+\ProvidesPackage{MaskouTex}[08/10/2019 Extension personnelle, V2.1]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+									
+					%PACKAGES UTILES
+					
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%****************************************************
+%%%%%%%%%  package concernant les textes  %%%%%%%%%
+%****************************************************
+
+\RequirePackage{a4wide}%spécifie que les marges du documents seront de taille 'normales' pour une page A4. 
+\RequirePackage[T1]{fontenc}% pour avoir les caractères accentués et césures correctes
+\RequirePackage[french]{babel} %specifie la langue dans laquelle le doc est écrit pour règles typographiques, date, tabel des matières
+\RequirePackage{textcomp} %Pour les caractères unicodes mal reconnus comme le °
+\RequirePackage{fancyhdr}%pour gérer les en-têtes et pieds de pages
+\RequirePackage{xcolor}%Pour les couleurs
+\RequirePackage[colorlinks=true,linkcolor=darkgray,citecolor=blue,urlcolor=purple]{hyperref}%pour avoir liens dans les documents pdf
+\RequirePackage{multicol}%pour écrire sur plusieurs colonnes
+\RequirePackage{graphicx}%pour inclure des figures (fichier eps ...)
+\RequirePackage{float, ifthen, calc,fp}%packages requis par tkz-tab et pour commande pour afficher ou non les solutions des exos
+\RequirePackage{lastpage}%permet de numéroter les pages sous la forme 1/4 2/4 avec la commande \thepage/\pageref{LastPage}
+\RequirePackage{lscape} %permet de changer localement d'orientation portrait vers paysage et vice versa
+\RequirePackage{pifont} %symbole speciaux. voir http://zoonek.free.fr/LaTeX/Fontes/fontes.html pour description
+\RequirePackage{enumitem}
+\frenchbsetup{StandardLists=true}
+
+%****************************************************
+%%%%%%%%%  package concernant les polices %%%%%%%%%
+%****************************************************
+
+
+\RequirePackage{amsmath,amssymb} %extension de l'American Mathematical society. Amsmath inclut entre autres les extensions amsby, amscd, amsfonts, amssymb et amstext pour avoir des symboles math en plus.
+
+\RequirePackage{mathrsfs}%police pour lettre cursive
+\RequirePackage{stmaryrd}% pour quelques commandes de symboles mathématiques
+\RequirePackage{eurosym}%pour avoir le symbole officiel euro avec \euro{} Voir http://www.theiling.de/eurosym.html pour les differents symboles
+
+\DeclareUnicodeCharacter{20AC}{\euro} %pour que le symbole euro d'un copier coller soit reconnu.
+
+\RequirePackage{avant}%pour avoir nouvelle fonte sf
+\RequirePackage{monster2e}%pour ecriture très grosse
+\RequirePackage{fancybox}%Pour des belles boîtes ovales, ombrées, etc.
+\RequirePackage{framed}%Pour des beaux encadrements
+
+\usepackage{frcursive}%Pour avoir une police cursive
+
+%****************************************************
+%%%%%%%%%  package concernant les tableaux %%%%%%%%
+%****************************************************
+
+
+\RequirePackage{multirow}%pour fusionner des colonnes ou lignes dans les tableaux
+
+\RequirePackage{tabularx}% permet de fixer la largeur des tableaux;de définir le style de colonne X qui est un paragraphe justifié à gauche, et dont la largeur s'adapte pour que le tableau fasse la largeur demandée et charge automatiquement le package array, et bénéficie donc de ses avantages
+
+\renewcommand*{\tabularxcolumn}[1]{m{#1}} %centrage vertical des cellules d'un tableau tabularx
+
+\RequirePackage{slashbox}% une barre oblique dans case de tableau
+\RequirePackage{colortbl}%Permet de colorier les cellules d'un tableau. 
+\RequirePackage{makecell}% Pour des réglages de cellules de tableaux
+
+
+%****************************************************
+%%%%%  package pour les graphiques et dessins %%%%%%
+%****************************************************
+
+
+\usepackage{pstricks,pst-all,pst-plot,pst-text,pst-tree,pst-eps,pst-fill,pst-node,pst-math,pst-coil,pstricks-add,pst-xkey,pst-3dplot,pst-func}
+
+
+%***********************************************************
+%%%%%%%%% Package pour écrire les nombres avec les séparations tous les 3 chiffres  %%%%%%%%%%
+\usepackage[np]{numprint}
+%*****************************************************
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+														
+					%FORMAT PAGE%
+														
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%****************************************************
+% Environnement itemize
+%****************************************************
+
+\AtBeginDocument{%Car sinon package babel french redefinit automatique les item au début du doc
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\diamond$}
+\renewcommand{\labelitemiii}{$\ast$}
+\renewcommand{\labelitemiv}{$\circ$}
+}
+
+%****************************************************
+% Ajustement des réglages du package enumitem
+%             (pour les listes)
+%****************************************************
+\setlist{topsep = 5pt ,leftmargin = 20pt , rightmargin = 0pt , itemsep=3pt , parsep=2pt , }
+
+
+%****************************************************
+% Environnement enumerate
+%****************************************************
+
+\renewcommand{\theenumi}{\bf\arabic{enumi}}
+\renewcommand{\labelenumi}{\bf\theenumi.}
+\renewcommand{\theenumii}{\bf\alph{enumii}}
+\renewcommand{\labelenumii}{\bf\theenumii.}
+\renewcommand{\theenumiii}{\bf{\roman{enumiii}}}
+\renewcommand{\labelenumiii}{\bf\theenumiii.}
+
+%pour un enumerate sur plusieurs colonnes
+\newenvironment{enumeratecol}[1][2]{\begin{multicols}{#1}\begin{enumerate}}{\end{enumerate}\end{multicols}}
+
+%****************************************************
+% Format a4 optimal et couleur
+%****************************************************
+
+\RequirePackage[a4paper,margin=2cm,centering,top=1.5cm]{geometry}
+\pagestyle{plain} %Par défaut pages numérotées et ni en tête ni pied de page
+\setlength{\parindent}{0pt}% Pas d'indentation en début de paragraphe
+
+% Interligne globale du document :
+\newcommand{\defaultbaselinestretch}{1.2}
+
+\renewcommand{\baselinestretch}{\defaultbaselinestretch}
+
+% Options de multicol
+\setlength{\unitlength}{1sp} \columnseprule=0pt \columnsep=18pt
+
+%Pour redéfinir les marges en local:depuis gauche en sens horaire
+\newcommand{\marges}[4]{\newgeometry{left=#1,top=#2,right=#3,bottom=#4}}
+
+%Redéfinition de divers espaces pour entêtes et pieds de page
+\setlength{\headheight}{20pt}%
+\setlength{\headsep}{13pt}%
+\setlength{\footskip}{30pt}%
+
+
+
+%****************************************************
+%definition des couleurs
+%****************************************************
+
+
+\definecolor{Noir}{RGB}{0,0,0}
+
+\definecolor{Blanc}{RGB}{255, 255, 225}
+\definecolor{BlancCasse}{RGB}{254, 254, 226}
+
+\definecolor{GrisTresClair}{RGB}{239, 239, 239}
+\definecolor{GrisClair}{RGB}{158, 158, 158}
+\definecolor{Gris}{RGB}{118, 111, 100}
+\definecolor{GrisFonce}{RGB}{48, 48, 48}
+\definecolor{GrisTresFonce}{RGB}{19, 14, 10}
+
+\definecolor{Jaune}{RGB}{231, 240, 13}
+\definecolor{JauneClair}{RGB}{247, 255, 60}
+\definecolor{JauneFonce}{RGB}{209, 182, 6}
+\definecolor{Paille}{cmyk}{0,0,0.15,0}
+
+\definecolor{Orange}{RGB}{237, 127, 16}
+\definecolor{OrangeClair}{RGB}{250, 164, 1}
+\definecolor{OrangeFonce}{RGB}{231, 62, 1}
+\definecolor{RougeOrange}{RGB}{255,64,64}
+
+\definecolor{Rouge}{RGB}{198, 8, 0}
+\definecolor{RougeClair}{RGB}{254, 27, 0}
+\definecolor{RougeFonce}{RGB}{133, 6, 6}
+
+\definecolor{Vert}{RGB}{20, 148, 20}
+\definecolor{VertClair}{RGB}{0, 255, 0}
+\definecolor{VertFonce}{RGB}{9, 106, 9}
+
+\definecolor{Olive}{HTML}{8DB600}
+
+\definecolor{Cyan}{RGB}{10, 186, 181}
+\definecolor{TurquoiseClair}{RGB}{0, 255, 255}
+\definecolor{TurquoiseFonce}{RGB}{4, 139, 154}
+\definecolor{Turquoise}{RGB}{0,150,255}
+
+\definecolor{Bleu}{RGB}{16, 52, 166}
+\definecolor{BleuClair}{RGB}{49, 140, 231}
+\definecolor{BleuFonce}{RGB}{34, 66, 124}
+\definecolor{DeepBlue}{rgb}{.21,.392,.545}
+
+\definecolor{Rose}{RGB}{253, 108, 158}
+\definecolor{RoseClair}{RGB}{254, 150, 160}
+\definecolor{RoseFonce}{RGB}{222, 49, 99}
+\definecolor{RoseFluo}{rgb}{1.0, 0.08, 0.58}
+
+\definecolor{Magenta}{RGB}{255, 0, 255}
+\definecolor{Mauve}{RGB}{212, 115, 212}
+
+\definecolor{Violet}{RGB}{161, 6, 132}
+\definecolor{VioletClair}{RGB}{219, 0, 115}
+\definecolor{VioletFonce}{RGB}{102, 0, 153}
+\definecolor{VioletMat}{rgb}{.573,.459,.651}
+
+\definecolor{Prune}{RGB}{129, 20, 83}
+\definecolor{PruneClair}{RGB}{219, 0, 115}
+\definecolor{PruneFonce}{RGB}{145, 40, 59}
+
+\definecolor{Beige}{RGB}{133, 109, 77}
+\definecolor{BeigeClair}{RGB}{200, 173, 127}
+\definecolor{BeigeFonce}{RGB}{78, 61, 40}
+
+\definecolor{Marron}{RGB}{126, 51, 0}
+\definecolor{MarronClair}{RGB}{159, 85, 30}
+\definecolor{MarronFonce}{RGB}{88, 41, 0}
+
+\definecolor{Brun}{RGB}{91, 60, 17}
+\definecolor{BrunClair}{RGB}{167, 103, 38}
+\definecolor{BrunFonce}{RGB}{63, 34, 4}
+
+\definecolor{Gold}{RGB}{218, 179, 10}
+\definecolor{Argent}{RGB}{206, 206, 206}
+\definecolor{Bordeaux}{RGB}{109, 7, 26}
+
+\definecolor{fondpaille}{cmyk}{0,0,0.15,0}\pagecolor{fondpaille}
+\definecolor{gris}{rgb}{0.7,0.7,0.7}
+
+
+\definecolor{rouge}{HTML}{F4404D}
+\definecolor{vert}{HTML}{008800}
+\definecolor{bleu}{HTML}{2D9AFF}
+
+%\definecolor{VertFonce}{rgb}{0,.4,0}
+%\definecolor{Rouge}{rgb}{.5,0,0}
+%\definecolor{RougeOrange}{rgb}{.988,.331,.012}
+%\definecolor{Orange}{rgb}{.980,.463,.031}
+%\definecolor{JauneOrange}{rgb}{.980,.694,.047}
+%\definecolor{Jaune}{rgb}{1.000,.918,.067}
+%\definecolor{DeepBlue}{rgb}{.21,.392,.545}
+%\definecolor{OrangeRed}{rgb}{.804,.215,0}
+%\definecolor{Yellow}{rgb}{.804,.608,.112}
+%\definecolor{Olive}{HTML}{8DB600}
+%\definecolor{RoseFluo}{rgb}{1.0, 0.08, 0.58}
+%\definecolor{Brun}{rgb}{.545,.1,.1}
+%\definecolor{BeigeFonce}{rgb}{.835,.776,.537}
+%\definecolor{Beige}{rgb}{.906,.863,.667}
+%\definecolor{BeigeClair}{rgb}{.957,.933,.863}
+%\definecolor{Violet}{rgb}{.573,.459,.651}
+%\definecolor{RoseFonce}{rgb}{.545,.04,.312}
+%\definecolor{Red}{rgb}{1,0,0}
+%
+%\definecolor{GrisClair}{rgb}{.85,.85,.85}
+
+\newcommand{\Blue}[1]{\textcolor{Bleu}{#1}}
+\newcommand{\Red}[1]{\textcolor{Rouge}{#1}}
+\newcommand{\Green}[1]{\textcolor{Vert}{#1}}
+
+%Définition des couleurs pour les  théorèmes, propositions definitions, etc
+\definecolor{deficolor}{HTML}{2D9AFF}
+\colorlet{backdeficolor}{deficolor!10}%{036DD0}%dégradé bleu{666666}%dégradé gris
+\definecolor{theocolor}{HTML}{F4404D}
+\colorlet{backtheocolor}{theocolor!10}
+\definecolor{methcolor}{HTML}{008800}%12BB05}
+\definecolor{cadrecolor}{HTML}{008800}
+\colorlet{backcadrecolor}{cadrecolor!10}
+\colorlet{backmethcolor}{methcolor!10}
+\definecolor{backilluscolor}{HTML}{EDEDED}
+\definecolor{sectioncolor}{HTML}{B2B2B2}%vert : {HTML}{008800}%{HTML}{2D9AFF}
+\definecolor{subsectioncolor}{HTML}{B2B2B2}%vert : {HTML}{008800}%{rgb}{0.5,0,0}
+\definecolor{engcolor}{HTML}{D4D7FE}
+\definecolor{exocolor}{rgb}{0,0.6,0}
+\definecolor{exosoltitlecolor}{rgb}{0,0.6,0}
+\definecolor{titlecolor}{rgb}{1,1,1}
+\definecolor{exoccolor}{rgb}{.573,.459,.651}
+\colorlet{backexoccolor}{exoccolor!10}
+\definecolor{backexoccolor}{HTML}{EEEEEE}
+
+\definecolor{CouleurExemple}{rgb}{.545,.1,.1}
+\definecolor{CouleurRemarque}{rgb}{0,.4,0}
+\definecolor{CouleurRappel}{rgb}{.804,.215,0}
+\definecolor{CouleurMethode}{rgb}{.545,.04,.312}
+\definecolor{CouleurNotation}{rgb}{.835,.776,.537}
+\definecolor{CouleurVocabulaire}{rgb}{.835,.776,.537}
+\definecolor{CouleurSavoirFaire}{rgb}{1.0, 0.08, 0.58}
+\definecolor{CouleurPreuve}{rgb}{.21,.392,.545}
+\definecolor{CouleurRegle}{HTML}{2D9AFF}
+\definecolor{CouleurGraphiquement}{RGB}{133, 109, 77}
+
+%****************************************************
+%commande pour enlever les couleurs avant impression
+%****************************************************
+
+\newcommand{\nocolor}{%
+\pagecolor{white}
+
+\definecolor{BlancCasse}{RGB}{245,245,245}
+
+\definecolor{GrisTresClair}{RGB}{239, 239, 239}
+\definecolor{GrisClair}{RGB}{158, 158, 158}
+\definecolor{Gris}{RGB}{118, 111, 100}
+\definecolor{GrisFonce}{RGB}{48, 48, 48}
+\definecolor{GrisTresFonce}{RGB}{19, 14, 10}
+
+\definecolor{Jaune}{RGB}{161,161,161}
+\definecolor{JauneClair}{RGB}{188,188,188}
+\definecolor{JauneFonce}{RGB}{132,132,132}
+\definecolor{Paille}{cmyk}{0.0375,0.0375,0.0375,0.0375}
+
+\definecolor{Orange}{RGB}{127,127,127}
+\definecolor{OrangeClair}{RGB}{138,138,138}
+\definecolor{OrangeFonce}{RGB}{98,98,98}
+\definecolor{RougeOrange}{RGB}{128,128,128}
+
+\definecolor{Rouge}{RGB}{69,69,69}
+\definecolor{RougeClair}{RGB}{94,94,94}
+\definecolor{RougeFonce}{RGB}{48,48,48}
+
+\definecolor{Vert}{RGB}{63,63,63}
+\definecolor{VertClair}{RGB}{85,85,85}
+\definecolor{VertFonce}{RGB}{41,41,41}
+
+\definecolor{Olive}{HTML}{8DB600}
+
+\definecolor{Cyan}{RGB}{126,126,126}
+\definecolor{TurquoiseClair}{RGB}{170,170,170}
+\definecolor{TurquoiseFonce}{RGB}{99,99,99}
+\definecolor{Turquoise}{RGB}{135,135,135}
+
+\definecolor{Bleu}{RGB}{78,78,78}
+\definecolor{BleuClair}{RGB}{140,140,140}
+\definecolor{BleuFonce}{RGB}{75,75,75}
+\definecolor{DeepBlue}{rgb}{0.38,0.38,0.38}
+
+\definecolor{Rose}{RGB}{173,173,173}
+\definecolor{RoseClair}{RGB}{188,188,188}
+\definecolor{RoseFonce}{RGB}{123,123,123}
+\definecolor{RoseFluo}{rgb}{0.55,0.55,0.55}
+
+\definecolor{Magenta}{RGB}{170,170,170}
+\definecolor{Mauve}{RGB}{180,180,180}
+
+\definecolor{Violet}{RGB}{100,100,100}
+\definecolor{VioletClair}{RGB}{111,111,111}
+\definecolor{VioletFonce}{RGB}{85,85,85}
+\definecolor{VioletMat}{rgb}{0.561,0.561,0.561}
+
+\definecolor{Prune}{RGB}{77,77,77}
+\definecolor{PruneClair}{RGB}{111,111,111}
+\definecolor{PruneFonce}{RGB}{81,81,81}
+
+\definecolor{Beige}{RGB}{106,106,106}
+\definecolor{BeigeClair}{RGB}{167,167,167}
+\definecolor{BeigeFonce}{RGB}{60,60,60}
+
+\definecolor{Marron}{RGB}{59,59,59}
+\definecolor{MarronClair}{RGB}{91,91,91}
+\definecolor{MarronFonce}{RGB}{43,43,43}
+
+\definecolor{Brun}{RGB}{56,56,56}
+\definecolor{BrunClair}{RGB}{103,103,103}
+\definecolor{BrunFonce}{RGB}{34,34,34}
+
+\definecolor{Gold}{RGB}{136,136,136}
+\definecolor{Argent}{RGB}{206, 206, 206}
+\definecolor{Bordeaux}{RGB}{47,47,47}
+
+\definecolor{gris}{rgb}{0.7,0.7,0.7}
+\definecolor{rouge}{rgb}{0.25,0.25,0.25}
+\definecolor{bleu}{rgb}{0.35,0.35,0.35}
+\definecolor{vert}{rgb}{0.5,0.5,0.5}
+\definecolor{deficolor}{HTML}{B2B2B2}
+\definecolor{backdeficolor}{HTML}{EEEEEE}%{036DD0}%dégradé bleu{666666}%dégradé gris
+\definecolor{theocolor}{HTML}{B2B2B2}
+\definecolor{backtheocolor}{HTML}{EEEEEE}
+\definecolor{methcolor}{HTML}{B2B2B2}
+\definecolor{backmethcolor}{HTML}{EEEEEE}
+\definecolor{backilluscolor}{HTML}{EEEEEE}
+\definecolor{sectioncolor}{HTML}{B2B2B2}
+\definecolor{subsectioncolor}{HTML}{B2B2B2}
+\definecolor{engcolor}{HTML}{EEEEEE}
+\definecolor{exocolor}{HTML}{3B3838}
+\definecolor{exosoltitlecolor}{rgb}{0,0,0}
+\definecolor{titlecolor}{rgb}{0,0,0}
+\definecolor{exoccolor}{HTML}{B2B2B2}
+\definecolor{backexoccolor}{HTML}{EEEEEE}
+\definecolor{cadrecolor}{HTML}{B2B2B2}
+\definecolor{backcadrecolor}{HTML}{EEEEEE}
+\definecolor{Olive}{rgb}{0.2,0.2,0.2}
+\definecolor{VertFonce}{rgb}{0.15,0.15,0.15}
+\definecolor{RoseFonce}{rgb}{0.25,0.25,0.25}
+\definecolor{Brun}{rgb}{0.15,0.15,0.15}
+\definecolor{OrangeRed}{rgb}{0.35,0.35,0.35}
+\definecolor{DeepBlue}{rgb}{0.4,0.4,0.4}
+\definecolor{Red}{rgb}{.5,.5,.5}
+
+\definecolor{fondpaille}{cmyk}{0.0375,0.0375,0.0375,0.0375}
+\definecolor{rouge}{RGB}{128,128,128}
+\definecolor{vert}{RGB}{45,45,45}
+\definecolor{bleu}{RGB}{151,151,151}
+
+\colorlet{CouleurExemple}{darkgray}
+\colorlet{CouleurRemarque}{darkgray}
+\colorlet{CouleurRappel}{darkgray}
+\colorlet{CouleurMethode}{darkgray}
+\colorlet{CouleurNotation}{darkgray}
+\colorlet{CouleurVocabulaire}{darkgray}
+\colorlet{CouleurSavoirFaire}{darkgray}
+\colorlet{CouleurPreuve}{darkgray}
+\colorlet{CouleurRegle}{darkgray}
+\colorlet{CouleurGraphiquement}{darkgray}
+
+\colorlet{blue}{darkgray!80}
+\colorlet{red}{darkgray}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+%COMMANDES POUR CHARGER OCCASIONNELLEMENT DES PAQUETS EN PLUS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%****************************************************
+% pour inclure package algorithm2e permettant d'écrire des algorithmes
+%****************************************************
+
+\newcommand{\usealgorithms}[1]{\usepackage[#1,french,frenchkw,boxruled]{algorithm2e}
+%argument #1:options éventuelles à charger
+\setlength{\fboxrule}{1pt}
+\SetKwIF {Si}{SinonSi}{Sinon}{si}{alors}{sinon~si}{sinon}{fin~si}
+\SetKwFor{Tq}{tant~que~}{~faire~}{fin~tant~que}
+\SetKwFor{PourCh}{pour~chaque }{ faire }{fin pour~chaque}
+\SetKwFor{Pour}{pour }{ faire }{fin~pour}
+\SetKwInput{Sortie}{Sortie}
+\SetKwInput{Vars}{Variables}
+\SetKwInput{Traitement}{Traitement}
+\SetKwInput{Init}{Initialisation}
+\SetKwProg{Fonc}{Fonction}{ ~définie~par}{Fin~fonction}
+\SetKwProg{Func}{Function}{ ~is}{end~function}}
+
+
+%-------- Environnement algo avec en argument lignes numérotées ou non --------
+\newenvironment{algo}[1]{%
+\setlength{\algomargin}{.4cm}
+\SetNlSkip{0.5cm}
+\ifthenelse{\equal{#1}{num}}{\LinesNumbered}{\ifthenelse{\equal{#1}{pasnum}}{\LinesNumberedHidden}{%
+}}
+\SetAlgoLined%
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLongEnd
+}{
+\end{algorithm}
+}
+
+
+%****************************************************
+% pour taper du code info 
+%****************************************************
+
+\usepackage{listings}%Connait différents languages et permet de customiser la mise en forme.
+
+\lstset{
+  literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\EUR}}1 {£}{{\pounds}}1
+}% Pour ne pas avoir de souci avec l'encodage UTF8 et les caractères spéciaux
+
+\lstdefinestyle{num}{numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt}
+\lstdefinestyle{pasnum}{numbers=none}% Définit deux options: numéroter les lignes ou pas
+
+
+%--------- Pour taper du code Python --------------------
+\lstnewenvironment{code-python}[2][]{
+\lstset{style=#2,upquote=true,backgroundcolor=\color{gray!20},frame=trBL,
+keywordstyle=\color{purple},
+columns=flexible,
+basicstyle=\ttfamily,
+language={Python},
+commentstyle=\color{gray!110},
+stringstyle=\color{blue},
+tabsize=4,
+#1
+}}{}
+%l'argument #2 est le style: numeroté ou non (num ou pasnum)
+
+
+
+
+
+%---------------------------------------------------------
+
+%---------- Pour taper du code HTML ----------------------
+\lstnewenvironment{code-html}[2][]{
+\lstset{style=#2,upquote=true,backgroundcolor=\color{gray!10},frame=trBL,
+keywordstyle=\color{purple},
+columns=flexible,
+basicstyle=\ttfamily,
+language={HTML},
+commentstyle=\color{gray!110},
+stringstyle=\color{blue},
+tabsize=4,
+#1
+}}{}
+%l'argument #2 est le style: numeroté ou non (num ou pasnum)
+%----------------------------------------------------------
+
+
+%------------- Pour taper du code PHP ---------------------
+\lstnewenvironment{code-php}[2][]{
+\lstset{style=#2,upquote=true,backgroundcolor=\color{gray!10},frame=trBL,
+keywordstyle=\color{purple},
+columns=flexible,
+basicstyle=\ttfamily,
+language={PHP},
+commentstyle=\color{gray!110},
+stringstyle=\color{blue},
+tabsize=4,
+#1
+}}{}
+%l'argument #2 est le style: numeroté ou non (num ou pasnum)
+%------------------------------------------------------------
+
+%------------- Pour taper du code...LaTeX! ------------------
+\lstnewenvironment{code-latex}[2][]{
+\lstset{
+style=#2,
+upquote=true,backgroundcolor=\color{gray!10},frame=trBL,
+columns=flexible,
+basicstyle=\ttfamily,
+language={[LaTeX]TeX},
+texcsstyle=*\color{blue},
+commentstyle=\color{gray!110},
+moretexcs={abslabeldelim,setlength,abstitleskip},
+tabsize=4,
+#1
+}}{}
+%l'argument #2 est le style: numeroté ou non (num ou pasnum)
+
+%****************************************************
+% pour inclure package tikz permettant faire tableau variations, qcm etc
+%****************************************************
+
+\RequirePackage{tikz,tkz-base,tkz-euclide,tkz-graph,tkz-tab,tkz-fct,tkz-linknodes}%tkz-tab pour les tableaux de variation,
+%tkz-linknodes et tkz-graph pour les graphes, tkz-base et tkz-fct pour les représentations graphiques.
+\usetikzlibrary{decorations}
+\usetikzlibrary{shadows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+
+\RequirePackage[framemethod=tikz]{mdframed}%Pour fabriquer les beaux environnements théorèmes et plus encore
+\RequirePackage[many]{tcolorbox}% Pour faire les théorèmes et autres...
+\tcbuselibrary{listingsutf8}
+\tcbuselibrary{minted}     
+
+\newtcblisting{CodePython}{%
+   listing options=minted,%
+   minted style=colorful,
+minted language=python,%
+minted options={linenos=true,numbers=left,breaklines,%
+   },
+%      {upquote          = true,                         
+%       breaklines       = true,
+%       showstringspaces = false, 
+%       numbers          = left,
+%       stepnumber       = 1,
+%       numberstyle      = \tiny,
+%       numbersep        = 10pt,                         
+%       keywordstyle     = \color{Violet},
+%       columns          = flexible,
+%       basicstyle       = \ttfamily,
+%       language         = {Python},
+%       commentstyle     = \color{Gris},
+%       stringstyle      = \color{BleuFonce},
+%       identifierstyle  = \color{VertFonce},
+%       tabsize          = 3,
+%      },%
+   colback       = Gold!10,
+   colframe      = Gold!10,
+   boxrule       = 2pt,
+   shadow        = {1.5mm}{-1.5mm}{0mm}{gray!75!white},
+   left          = 5mm,enhanced,
+   arc           = 5.5pt,
+   sharp corners = all,
+   listing only
+}
+
+
+
+%********************************************************************************************************************************************************
+% Variables pour l'enseignement :
+%********************************************************************************************************************************************************
+
+
+\newcommand{\iAuteur}{Auteur}
+\newcommand{\iEtablissement}{Établissement}
+\newcommand{\iClasse}{Classe}
+\newcommand{\iMatiere}{Matière}
+\newcommand{\iAnneeScolaire}{Année Scolaire}
+\newcommand{\iRecommandations}{Recommandations \dots}
+\newcommand{\iDate}{\today}
+
+\newcommand{\Date}[1]{\renewcommand{\iDate}{#1}}
+\newcommand{\Auteur}[1]{\renewcommand{\iAuteur}{#1}}
+\newcommand{\Professeur}[1]{\renewcommand{\iAuteur}{#1}}
+\newcommand{\Etablissement}[1]{\renewcommand{\iEtablissement}{#1}}
+\newcommand{\Classe}[1]{\renewcommand{\iClasse}{#1}}
+\newcommand{\Matiere}[1]{\renewcommand{\iMatiere}{#1}}
+\newcommand{\AnneeScolaire}[1]{\renewcommand{\iAnneeScolaire}{Année Scolaire #1}}
+\newcommand{\Recommandations}[1]{\renewcommand{\iRecommandations}{#1}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+												
+					%CONFIGURATION LANGUAGE
+					
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%language par defaut = français
+%\newcommand{\Exple}{Exemple}
+%\newcommand{\Exples}{Exemples}
+\newcommand{\Dem}{Démonstration}
+\newcommand{\Theo}{Théorème}
+\newcommand{\Defin}{Définition}
+%\newcommand{\Exercice}{Exercice}
+\newcommand{\Chapitre}{Chapitre}
+\newcommand{\Partie}{Partie}
+\newcommand{\Materiels}{Matériels}
+\newcommand{\Prerequis}{Pré-requis}
+\newcommand{\Objectifs}{Objectifs}
+\newcommand{\Prop}{Proposition}
+
+
+\newcommand{\fr}{%language = français
+\renewcommand{\Exple}{Exemple}
+\renewcommand{\Exples}{Exemples}
+\renewcommand{\Dem}{Démonstration}
+\renewcommand{\Theo}{Théorème}
+\renewcommand{\Defin}{Définition}
+%\renewcommand{\Exercice}{Exercice}
+\renewcommand{\Chapitre}{Chapitre}
+\renewcommand{\Partie}{Partie}
+\renewcommand{\Materiels}{Matériels}
+\renewcommand{\Prerequis}{Pré-requis}
+\renewcommand{\Objectifs}{Objectifs}
+\renewcommand{\Prop}{Proposition}
+}
+
+
+%language anglais
+\newcommand{\en}{
+\renewcommand{\Exple}{Example}
+\renewcommand{\Exples}{Examples}
+\renewcommand{\Dem}{Proof}
+\renewcommand{\Theo}{Theorem}
+\renewcommand{\Defin}{Definition}
+%\renewcommand{\Exercice}{Exercise}
+\renewcommand{\Chapitre}{Chapter}
+\renewcommand{\Partie}{Part}
+\renewcommand{\Materiels}{Materials}
+\renewcommand{\Prerequis}{Prerequisites}
+\renewcommand{\Objectifs}{Objectives}
+\renewcommand{\Prop}{Proposition}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+												
+			%RACCOURCI MATH%
+													
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%****************************************************
+%Pour des fractions plus jolies selon les situations
+%****************************************************
+
+\newcommand{\pfrac}[2]{\scriptstyle \frac{#1}{#2} \displaystyle}
+\newcommand{\bfrac}[2]{\dfrac{~#1~}{~#2~}}
+
+%****************************************************
+%Ensemble de nombres et autres objets mathématiques
+%****************************************************
+
+\newcommand{\C}{\mathbb{C}}  %ensemble complexe
+\newcommand{\R}{\mathbb{R}}  %ensemble réel
+\newcommand{\Q}{\mathbb{Q}}  %ensemble quotient
+\newcommand{\D}{\mathbb{D}}  %ensemble decimaux
+\newcommand{\Z}{\mathbb{Z}}  %ensemble relatif
+\newcommand{\N}{\mathbb{N}}  %ensemble naturel
+\newcommand{\K}{\mathbb{K}}  %corps commutatif
+\newcommand{\U}{\mathbb{U}}  %éléments inversibles ou complexes de module 1
+
+%Laplace ou appli linéaire
+\renewcommand{\L}{\mathscr{L}}
+
+%ensemble de matrices
+\newcommand{\M}{\mathscr{M}}  
+
+
+%****************************************************
+%Raccourcis pour la géométrie
+%****************************************************
+
+\newcommand{\Co}{\ensuremath{\mathscr{C}}}%cercle ou courbe
+\newcommand{\Dr}{\ensuremath{(\mathscr{D})}}%droite (D)
+\newcommand{\Drp}{\ensuremath{(\mathscr{D}')}}%droite (D')
+\newcommand{\A}{\ensuremath{\mathscr{A}}}%aire
+\newcommand{\V}{\ensuremath{\mathscr{V}}}%volume
+\renewcommand{\S}{\ensuremath{\mathscr{S}}}%sphère
+\newcommand{\Pl}{\ensuremath{\mathscr{P}}}%Plan
+
+% Vecteur AB.(commande tex)
+\def\vect#1{\vbox{
+\lineskip=-.04em\baselineskip=0pt\lineskiplimit=0pt \ialign{##\crcr
+\leaders\hbox{$\scriptstyle{-}$\kern-.4em}\hfill
+$\scriptstyle{\rightarrow}$\crcr
+$\hfil\displaystyle{#1}\hfil$\crcr}}}
+
+%Coordonnées des vecteurs en colonne à 2 ou 3 coordonnées
+\newcommand*\coordonnees[2][1ex]{\VCoordaux#2,,\VCoordaux{#1}}% arg optionnel = espacement entre coordonnées
+\def\VCoordaux#1,#2,#3,#4\VCoordaux#5{%
+    \ensuremath{\left(\hspace{-2pt}\vcenter{\baselineskip0pt
+    \halign{\hfil\kern.25em$##$\kern.25em\hfil\crcr
+        #1\cr\noalign{\vskip#5}#2\ifthenelse{\equal{#3}{}}{}{\cr\noalign{\vskip#5}#3}\crcr}%
+    }\hspace{-2pt}\right)}%
+}
+
+\newcommand{\coord}[1]{
+{\footnotesize \coordonnees[2pt]{#1}}
+}
+
+\newcommand{\coor}[1]{
+{\scriptsize \coordonnees[2pt]{#1}}
+}
+
+%angle orienté
+\newcommand{\anglvec}[2]{(\vect{#1};\vect{#2}) } 
+
+%angle
+\newcommand{\angl}[1]{\ensuremath{\widehat{#1}}}
+ 
+%arc de cercle
+\newlength{\longarc}
+\newcommand{\arc}[1]{\settowidth{\longarc}{$#1$}%
+         \addtolength{\longarc}{-0.5em}%
+\unitlength \longarc%
+\ensuremath{%
+         \stackrel{\begin{picture}(1,0.2)
+                 \qbezier(0,0)(0.5,0.2)(1,0)
+         \end{picture}}
+         {#1}
+}}
+
+%repère plan vecteurs
+\newcommand{\oij}{\ensuremath{(O;\vec{\mbox{\it \i}},\vec{\mbox{\it \j}})}} 
+\newcommand{\ouv}{\ensuremath{(O;\vec{u},\vec{v})}}
+
+%repère plan points
+\newcommand{\OIJ}{\ensuremath{(O;I,J)}} 
+
+%repère espace
+\newcommand{\oijk}{\ensuremath{(O;\vec{\mbox{\it \i}},\vec{\mbox{\it \j}},\vec{k})}} 
+ 
+%****************************************************
+%Fonctions
+%****************************************************
+
+%#1: Nom, #2: Ensemble de départ, #3: Ensemble d'arrivée,#4:Variable,#5: Expression
+\newcommand{\fonction}[5]{\begin{array}[t]{lrcl}
+#1: & #2 & \longrightarrow & #3 \\
+    & #4 & \longmapsto & #5 \end{array}}
+
+%#1: nom, #2: Ens de départ, #3: Ens d'arrivée
+\newcommand{\f}[3]{ #1: #2 \longrightarrow #3 } 
+
+%#1: Variable, #2: Expression
+\newcommand{\fct}[2]{ #1 \mapsto #2 } 
+
+%#1: nom, #2: variable, #3:Expression
+\newcommand{\fctn}[3]{ #1: #2 \longmapsto #3 }
+
+%fonction restreinte à un sous-ensemble
+%#1: nom, #2: domaine de restriction
+\newcommand{\frstr}[2]{#1_{|#2}}
+
+%****************************************************
+%Raccourcis pour les fonctions
+%****************************************************
+%Domaine de définition 
+\newcommand{\Df}{\ensuremath{\mathscr{D}}}
+
+%intervalles I et J
+\newcommand{\I}{\ensuremath{\mathcal{I}}}
+\newcommand{\J}{\ensuremath{\mathcal{J}}}
+
+%intégrantes
+\newcommand{\dx}{\textrm{d} x} 
+\newcommand{\dt}{\textrm{d} t} 
+\newcommand{\dz}{\textrm{d} z} 
+\newcommand{\dy}{\textrm{d} y} 
+\newcommand{\du}{\textrm{d} u} 
+\newcommand{\dd}[1]{\textrm{d} #1} %intégrante qq
+
+%fonction exponentielle (e droit)
+\newcommand{\e}{\textrm{e} } 
+
+%Probas et espérance
+\renewcommand{\P}[1]{\mathbb{P}\big( #1 \big)}
+\newcommand{\E}[1]{\mathbb{E}\big( #1 \big)}
+
+
+
+\newcommand{\toinf}[2]{\textrm{\tiny $\begin{array}{c}#1\to #2\\ #1<#2\\ \end{array}$} }%limites à gauche
+\newcommand{\tosup}[2]{\textrm{\tiny $\begin{array}{c}#1\to #2\\ #1>#2\\ \end{array}$} }%limites à droite
+
+%****************************************************
+%Complexe
+%****************************************************
+
+%partie imaginaire ou Image
+\renewcommand{\Im}{\textrm{Im}} 
+%partie réelle
+\renewcommand{\Re}{\textrm{Re}} 
+
+\renewcommand{\i}{\textrm{i}} %i droit
+\renewcommand{\j}{\textrm{j}} %j droit
+\renewcommand{\bar}[1]{\overline{#1}} %conjugué
+
+%****************************************************
+%Mots usuels dans les formules de maths
+%****************************************************
+
+\newcommand{\et}{\text{ et }} 
+%\newcommand{\si}{\text{ si }} 
+\newcommand{\ou}{\text{ ou }} 
+\newcommand{\tq}{/}
+\newcommand{\avec}{\text{ avec }}  
+\newcommand{\pour}{\text{ pour }} 
+
+%****************************************************
+%suites 
+%****************************************************
+
+\newcommand{\un}{(u_n)_{\tiny n\in\N}}
+\newcommand{\vn}{(v_n)_{\tiny n\in\N}}
+\newcommand{\wn}{(w_n)_{\tiny n\in\N}}
+\newcommand{\xn}{(x_n)_{\tiny n\in\N}}
+\newcommand{\yn}{(y_n)_{\tiny n\in\N}}
+\newcommand{\zn}{(z_n)_{\tiny n\in\N}}
+\newcommand{\an}{(a_n)_{\tiny n\in\N}}
+\newcommand{\bn}{(b_n)_{\tiny n\in\N}}
+
+\newcommand{\suite}[3]{(#1_{#2})_{\tiny #2\in #3}}%#1:nom,#2:entier,#3:domaine
+
+%****************************************************
+%symbole logique
+%****************************************************
+
+\newcommand{\ssi}{\ensuremath{\Longleftrightarrow}}
+\newcommand{\implique}{\ensuremath{\Longrightarrow}}
+
+
+%arihmetique
+\renewcommand{\mod}{\mbox{~mod~}}% Symbole pour modulo
+
+%****************************************************
+%Divers
+%****************************************************
+
+
+\newcommand{\abs}[1]{\left| #1 \right|} %valeur absolue
+\newcommand{\dis}{\displaystyle}
+
+\renewcommand{\leq}{\leqslant} %supérieur ou égal
+\renewcommand{\geq}{\geqslant} %inferieur ou égal
+\newcommand{\cro}[1]{\left[{#1}\right]} %grand crochet
+\newcommand{\pa}[1]{\left({#1}\right)} %grande parenthèse
+\newcommand{\acc}[1]{ \left\{ #1 \right\} } % Accolades de taille varaible
+\newcommand{\norme}[1]{\left\|#1\right\|}%pour les normes
+
+\newcommand{\bigcro}[1]{\bigg[{#1}\bigg]} % très grand crochet
+\newcommand{\bigpa}[1]{\bigg({#1}\bigg)} %très grande parenthèse
+\newcommand{\bigacc}[1]{ \bigg\{ #1 \bigg\} } % très grand accolade
+\newcommand{\bigabs}[1]{\bigg| #1 \bigg|}
+\newcommand{\bignorme}[1]{\bigg\| #1 \bigg\|}%pour les grosses normes
+
+
+\newcommand{\dotbox}[1]{\parbox{#1}{\strut\dotfill}}% Pour des pointillés d'une longueur donnée
+
+\newcommand\gauss[2]{1/(#2*sqrt(2*pi))*exp(-((\x -#1)^2)/(2*#2^2))} % Fonction de Gauss, paramètres mu and sigma
+
+%****************************************************
+%Systèmes
+%****************************************************
+
+% ==================================================
+% IfEmpty
+% ==================================================
+\newcommand{\ifempty}[3]{\ifx\hfuzz#1\hfuzz #2 \else #3\fi}
+% \hfuzz sert seulement à ne pas être présent dans #1
+% \ifstrempty : incompatible avec latexml
+% \ifblank : inactif
+
+
+\newenvironment{systeme}[1][]
+{\left\lbrace
+  \ifempty{#1}{\begin{array}{@{}r*{20}{@{}>{\strut}l<{\strut}}}}{\begin{array}{#1}}}
+                                                                   {\end{array}\right.}
+
+
+
+%****************************************************
+% Touche calculatrice
+%****************************************************
+
+\newcommand{\touche}[1]{
+\begin{tikzpicture}
+\node[draw,color=black,fill=gray!50,rounded corners=2pt,drop
+shadow,inner sep=1pt,shadow
+xshift=-2pt,minimum height=15pt,minimum width=20pt]{\footnotesize
+\textsf{#1}};
+\end{tikzpicture}
+}
+
+\newcommand{\vide}[0]{\varnothing} %ensemble vide
+\newcommand{\fvalid}{\raisebox{1ex}{\rotatebox{180}{$\Rsh$}}} % flèche entrée pour prg casio
+
+%****************************************************
+%Objets mathématiques usuels
+%****************************************************
+\newcommand{\Rev}{$\R$-espace vectoriel }
+\newcommand{\Cev}{$\C$-espace vectoriel }
+\newcommand{\Ker}{\textrm{Ker}}  % Noyau
+\newcommand{\Id}{\textrm{Id}}  % Identité
+\newcommand{\id}{\textrm{id}}  % Identité
+
+\DeclareMathOperator{\sh}{sh}
+\DeclareMathOperator{\ch}{ch}
+\DeclareMathOperator{\Th}{th}
+\DeclareMathOperator{\Arctan}{Arctan}
+\DeclareMathOperator{\Arcsin}{Arcsin}
+\DeclareMathOperator{\Arccos}{Arccos}
+\DeclareMathOperator{\Argsh}{Argsh}
+\DeclareMathOperator{\Argch}{Argch}
+\DeclareMathOperator{\Argth}{Argth}
+\DeclareMathOperator{\Vect}{Vect}
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rg}{rg}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\GL}{GL}
+%\DeclareMathOperator{\GO}{\O}
+\DeclareMathOperator{\SL}{SL}
+%\DeclareMathOperator{\SO}{SO}
+\DeclareMathOperator{\codim}{codim}
+\DeclareMathOperator{\Ent}{Ent}
+\DeclareMathOperator{\Aire}{Aire}
+
+\DeclareMathOperator{\Mat}{Mat}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Rot}{Rot}
+\DeclareMathOperator{\grad}{\nabla\!}
+\DeclareMathOperator{\Fr}{Fr}
+\DeclareMathOperator{\Adh}{Adh}
+\DeclareMathOperator{\Com}{Com}
+\DeclareMathOperator{\com}{Com}
+\DeclareMathOperator{\Card}{Card}
+
+\DeclareMathOperator{\Cov}{Cov}
+
+\DeclareMathOperator{\sgn}{signe}
+\DeclareMathOperator{\sym}{sym}
+
+
+\DeclareMathOperator{\PGCD}{PGCD}
+\DeclareMathOperator{\PPCM}{PPCM}
+\DeclareMathOperator{\pgcd}{pgcd}
+\DeclareMathOperator{\ppcm}{ppcm}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\non}{non}
+\DeclareMathOperator{\Det}{Det}
+\DeclareMathOperator{\Cl}{Cl}
+
+\renewcommand\Re{\operatorname{Re}}
+\renewcommand\th{\operatorname{th}}
+\renewcommand\Im{\operatorname{Im}}
+\renewcommand\det{\operatorname{det}}
+\renewcommand\ker{\operatorname{Ker}}
+
+\newcommand{\Dp}[2]{\frac{\partial #1}{\partial #2}}
+
+
+
+%*******************************************************************
+%---------- Commandes GAEL -------------
+%*******************************************************************
+
+%\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+%    \DeclareMathSymbol{\coeur}{\mathalpha}{extraup}{86} % coeur noir
+
+    \newcommand{\IN}{{\mathbb{N}}}	    % N maths
+    \newcommand{\IZ}{{\mathbb{Z}}}	    % Z maths
+    \newcommand{\IP}{{\mathbb{P}}}	    % P pour proba
+    \newcommand{\IR}{{\mathbb{R}}}      % R maths
+    \newcommand{\IC}{{\mathbb{C}}}		% C maths
+    \newcommand{\IE}{{\mathbb{E}}}		% E pour ensemble ou esperance
+    \newcommand{\IQ}{{\mathbb{Q}}}      % ensemble quotient
+    \newcommand{\ID}{{\mathbb{D}}} 
+    \newcommand{\IU}{{\mathbb{U}}}      % Complexes de module 1
+    \newcommand{\dif}{{\mathrm{d}}}		% d de dx
+    
+    %\newcommand{\Aire}{{\mathcal{A}}}   % A pour aire de figure
+    
+    \newcommand{\nde}{$^{\text{\textsc{nde}}}$}  % pour ecrire 2nde
+    \newcommand{\erm}{$^{\text{\textsc{erm}}}$}  % pour ecrire Term
+
+    \newcommand{\ieg}{{~\leqslant~}}	% inférieur ou égale 
+    \newcommand{\seg}{{~\geqslant~}}	% supérieur ou égale
+
+    \newcommand{\Equiv}{{~~~~\Leftrightarrow~~~~}}	
+                                        % equivalence <=> (ac espaces)
+    \newcommand{\pEquiv}{{\Leftrightarrow}}
+                                        % equivalence <=> (sans esp)
+
+    \newcommand{\espace}{{\hspace{1cm}}}	% espace de 1cm horizontal
+    \newcommand{\sdl}{\bigbreak}            % Saut de ligne
+
+    \newcommand\pt[2]{\left(#1\,;\,#2\right)}   % Coordonées de points
+    
+%    \newcommand\mat[1]{%					% Matrice, plus rapide.
+%       \begin{pmatrix}
+%            #1
+%        \end{pmatrix}%
+%    }
+    
+%    \newcommand{\U}{\vect{u}}           % vecteur u
+%    \newcommand{\V}{\vect{v}}           % vecteur v
+%    \newcommand{\W}{\vect{w}}           % vecteur w
+    
+    
+    % ------ SYMBOLE d'implication et réciproque ENTOUREE cercle ---
+
+    \newcommand{\Rightarrowcircle}{%
+        \begin{minipage}{0.8cm}
+            \begin{tikzpicture}
+                \draw (0,0) node[draw,circle]{$\Rightarrow$};
+            \end{tikzpicture}
+        \end{minipage}%
+    }
+
+    \newcommand{\Leftarrowcircle}{%
+        \begin{minipage}{0.8cm}
+            \begin{tikzpicture}
+                \draw (0,0) node[draw,circle]{$\Leftarrow$};
+            \end{tikzpicture}
+        \end{minipage}%
+    }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+										
+			%ENTETE DE DOCUMENTS
+									
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%****************************************************
+%Entête pour les colles
+%****************************************************
+
+%#1: n° de la semaine
+\newcommand{\colle}[1]{
+\noindent {{\scshape \small \iEtablissement } \hfill  \small \iDate}\\
+\noindent {\scshape{\small \iMatiere} \hfill \setlength{\fboxsep}{2mm} \fbox{\bf Colles
+\iClasse ~-- Semaine #1} \hfill {\scshape \small \iAuteur \\}} \hrule
+\hrule\vspace{4mm}
+}
+
+
+
+%****************************************************
+% Entete classique 
+%****************************************************
+
+% #1 : titre
+% #2 : type (cours, exercice, module)
+\newcommand{\entete}[1]{
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\noindent {{\scshape \small \iEtablissement } \hfill  \small \iClasse}\\
+\noindent {\scshape{\small \iMatiere} \hfill \fbox{\bf #1 } \hfill {\scshape \small \iDate \\}} \hrule
+\hrule\vspace{3mm}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+}
+
+%****************************************************
+% Entête chapitre
+%****************************************************
+
+% #1 : numéro du chapitre
+% #2 : titre
+\newcommand{\chapitre}[2]{
+\newcounter{chap}
+\setcounter{chap}{#1} 
+\setcounter{section}{0}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LE]{\footnotesize \Chapitre~#1}
+\fancyhead[CE]{}
+\fancyhead[RE]{\footnotesize #2}
+\fancyhead[LO]{\footnotesize Cours de mathématiques}
+\fancyhead[CO]{}
+\fancyhead[RO]{\footnotesize \iClasse}
+%\fancyfoot[LE]{\footnotesize \iEtablissement}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+
+\vspace{2cm}
+\begin{center}
+\begin{framed}
+{\Huge\bf\Chapitre~\arabic{chap}\par
+#2\par}
+\end{framed}
+\end{center}
+\bigskip
+}
+
+%****************************************************
+% Entête neutre
+%****************************************************
+
+% #1 : titre
+\newcommand{\titre}[1]{
+%\pagestyle{fancy}
+%\fancyhead{}
+%\fancyhead[CE]{}
+%\fancyhead[RE]{\footnotesize #1}
+%\fancyhead[LO]{\footnotesize \iMatiere}
+%\fancyhead[CO]{}
+%\fancyhead[RO]{\footnotesize \iClasse}
+%\fancyfoot[LE]{\footnotesize \iEtablissement}
+%\fancyfoot[C]{\thepage/\pageref{LastPage}}
+
+\vspace{2cm}
+\begin{center}
+\begin{framed}
+{\Huge\bf\par
+#1\par}
+\end{framed}
+\end{center}
+\bigskip
+}
+
+%****************************************************
+% Entetes génériques
+%****************************************************
+
+
+% Deux lignes pour plus d'infos
+% #1 Le titre
+% #2 et #3: infos sur la gauche (Nom/Prénom, ou autre)
+% #4 et #5: Infos sur la droite (Date/Classe...)
+% #6 La largeur de ligne du tabular 1.5 pour du Large
+\newcommand{\EnteteDeuxLignes}[6]{%
+	\pagestyle{fancy}
+	\fancyfoot[C]{\thepage/\pageref{LastPage}}
+	\renewcommand{\headrulewidth}{0pt}
+	\setlength{\arrayrulewidth}{1pt}
+	\renewcommand{\arraystretch}{#6}
+		\begin{tabularx}{\linewidth}{l>{\centering \arraybackslash}Xr}
+			%\hline
+ 			#2 & \multirowcell{2}{#1} & #4\\
+ 			#3 & & #5\\
+			\hline
+		\end{tabularx}
+	\par \bigskip
+}
+
+% Une ligne pour moins d'infos
+% #1 Le titre
+% #2 infos sur la gauche (Maths,... ou autre)
+% #3 Infos sur la droite (Classe...)
+% #4 La largeur de ligne du tabular: 1.8 pour du Large
+\newcommand{\EnteteUneLigne}[4]{%
+	\pagestyle{fancy}
+	\fancyfoot[C]{\thepage/\pageref{LastPage}}
+	\renewcommand{\headrulewidth}{0pt}
+	\setlength{\arrayrulewidth}{1pt}
+	\renewcommand{\arraystretch}{#4}
+		\begin{tabularx}{\linewidth}{l>{\centering \arraybackslash}Xr}
+			\hline
+ 			\strut #2 & {\LARGE \textbf{\textsc{#1}}} & #3\\
+ 			\hline
+		\end{tabularx}
+	\par\bigskip
+}
+
+
+
+\newcommand{\COLLE}[1]{%
+   \EnteteDeuxLignes{\setlength{\fboxsep}{2mm} \fbox{\bf Colles \iClasse ~-- Semaine #1}}%
+   {\scshape\small \iEtablissement }%
+   {\scshape\small \iMatiere}%
+   {\scshape\small \iDate}{\scshape\small  \iAuteur}{0.8}
+}
+
+%****************************************************
+% Entête fiche bilan
+%****************************************************
+% #1 : numéro du chapitre
+% #2 : titre
+\newcommand{\bilan}[2]{
+\pagestyle{fancy}
+\fancyhead[CE]{\Large \bf Ch#1: #2}
+\fancyhead[CO]{\Large \bf Ch#1: #2}
+\fancyhead[LE]{\footnotesize Fiche révision}
+\fancyhead[RE]{\footnotesize \iClasse}
+\fancyhead[LO]{\footnotesize Fiche révision}
+\fancyhead[RO]{\footnotesize \iClasse}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+}
+
+%****************************************************
+% Entete fiche d'exercices
+%****************************************************
+
+% #1 : numéro du chapitre
+% #2 : titre du chapitre/de la notion
+\newcommand{\EXERCICES}[2]{
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead{}
+\fancyfoot[LE]{\footnotesize \iEtablissement}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+\textbf{\iClasse\hfill Chapitre #1}
+\begin{center}\begin{framed} {\Huge\bf #2 \\ 
+		\medskip \Large Exercices} \\
+		\end{framed}
+\end{center}
+}
+
+%****************************************************
+% Entete fiche d'activité
+%****************************************************
+
+% #1 : numéro du chapitre
+% #2 : titre du chapitre
+% #3 : Partie traitée
+
+\newcommand{\ACTIVITE}[3]{
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead{}
+\fancyhead[LO]{\textbf{\iClasse}}
+\fancyhead[RO]{\textbf{ Chapitre #1}}
+%\fancyfoot[LE]{\footnotesize \iEtablissement}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+\begin{center}\begin{framed} {\Huge\bf #2 \\ 
+		\medskip \Large #3} 
+		\end{framed}
+\end{center}
+}
+
+
+%****************************************************
+% Entete fiche d'activité par Thème
+%****************************************************
+
+% #1 : numéro du thème
+% #2 : titre du thème
+% #3 : Partie traitée
+
+\newcommand{\THACTIVITE}[3]{
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[LO]{\textbf{\iMatiere}}
+\fancyhead[RO]{\textbf{ Thème #1}}
+%\fancyfoot[LE]{\footnotesize \iEtablissement}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+
+\begin{center}\begin{framed} {\Huge\bf #2 \\ 
+		\medskip \Large #3} \\
+		\end{framed}
+\end{center}
+}
+
+
+%****************************************************
+% Entete de devoir surveillé 
+%****************************************************
+
+% #1 : numéro
+\newcommand{\DS}[1]{
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+\EnteteDeuxLignes{\fbox{\textbf{\textsc{Devoir Surveillé N°#1}}}}{{\small \textsc{\iEtablissement}}}{{\small \textsc{\iMatiere}}}{\small \iClasse}{{ \small \textsc{\iDate}}}{1}
+}
+
+%****************************************************
+% Entete de devoir maison 
+%****************************************************
+
+% #1 : numéro
+\newcommand{\DM}[1]{
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+\noindent {{\scshape \small \iEtablissement } \hfill  \small \iClasse}\\
+\noindent {\scshape{\small \iMatiere} \hfill \fbox{\bf Devoir Maison N°#1} \hfill {\scshape \small Dernier délai \iDate \\}} \hrule
+\hrule\vspace{3mm}
+}
+
+%****************************************************
+% Entete d'interro
+%****************************************************
+
+% #1 : numéro
+\newcommand{\INTERRO}[1]{
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}\noindent {{\scshape \small \iEtablissement } \hfill  \small \iClasse}\\
+\noindent {\scshape{\small \iMatiere} \hfill \fbox{\bf Interrogation écrite N°#1} \hfill {\scshape \small \iDate \\}} \hrule
+\hrule\vspace{3mm}
+}
+
+%****************************************************
+% Entete de devoir dénomination libre 
+%****************************************************
+
+% #1 : type de devoir
+% #2 : numéro
+\newcommand{\DEVOIR}[2]{
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}\noindent {{\scshape \small \iEtablissement } \hfill  \small \iClasse}\\
+\noindent {\scshape{\small \iMatiere} \hfill \fbox{\bf #1 N°#2} \hfill {\scshape \small \iDate \\}} \hrule
+\hrule\vspace{3mm}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+													
+			%COMMANDES POUR LES EXERCICES%
+													
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ---------------- Les activites ------------------
+        
+\newcounter{Etoile}
+\newcounter{NumeroActivite}
+
+\makeatletter
+\newcommand{\activite}[1][0]{%
+    \par\noindent%
+    \stepcounter{NumeroActivite}
+    \setcounter{Etoile}{0}
+    \hspace{-.25cm}%
+    \textbf{\textsc{Activité \arabic{NumeroActivite}}}~%
+    \ifthenelse{#1=0}%
+               {:\quad}%
+               {%
+                    :~(%
+                    \@whilenum\value{Etoile}<#1%
+                    \do{$\bigstar$\stepcounter{Etoile}}%
+                    )\par\medskip%
+               }%
+}
+\makeatother
+		
+		
+		
+% --------------- Les applications --------------------
+
+\newcounter{NumeroApplication}
+  
+\makeatletter
+\newcommand{\application}[1][0]{%
+    \par\noindent%
+    \stepcounter{NumeroApplication}
+    \setcounter{Etoile}{0}
+    \hspace{-.25cm}%
+    \textbf{\textsc{Application \arabic{NumeroApplication}}}~%
+    \ifthenelse{#1=0}%
+               {:\quad}%
+               {%
+                    :~(%
+                    \@whilenum\value{Etoile}<#1%
+                    \do{$\bigstar$\stepcounter{Etoile}}%
+                    )\par\medskip%
+               }%
+}
+\makeatother
+
+
+
+% --------------- Les exercices ---------------------
+
+    % REMARQUE :
+        % A la ligne ou pas ? (plutôt oui)
+
+\newcounter{NumeroExo}
+    
+\makeatletter
+\newcommand{\exercice}[1][0]{%
+    \par\noindent%
+    \stepcounter{NumeroExo}
+    \setcounter{Etoile}{0}
+    \hspace{-.25cm}%
+    \textbf{\textsc{Exercice \arabic{NumeroExo}}}~%
+    \ifthenelse{#1=0}%
+               {:\quad}%
+               {%
+                    :~(%
+                    \@whilenum\value{Etoile}<#1%
+                    \do{$\bigstar$\stepcounter{Etoile}}%
+                    )\par\medskip%
+               }%
+}
+\makeatother
+
+
+%****************************************************
+%configuration subsection exos : 
+%****************************************************
+
+\newcommand{\exostyle}{
+%redefinition des environnements enumerate
+\renewcommand{\theenumi}{\bfseries\color{exocolor}\fontfamily{ugq}\selectfont\arabic{enumi}}
+\renewcommand{\theenumii}{\bfseries\color{exocolor}\fontfamily{ugq}\selectfont\alph{enumii}}
+}
+ 
+%****************************************************
+% Partie dans un document
+%****************************************************
+
+\newcommand{\partie}[1]{
+\bigskip\par\hrulefill\par\smallskip\hfill{\Large\bf \textsf{#1}\hfill\smallskip\par\hrulefill\bigskip}
+\addtocontents{toc}{\medskip{\bf\textsf{#1\dotfill\arabic{page}}\par}}
+\par}
+
+%****************************************************
+%Groupe d'exercices
+%****************************************************
+
+\newcommand{\exocpart}[1]{{\par \bigskip\bf \large #1}\bigskip\par
+\refstepcounter{subsection}
+\addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#1}
+}
+
+%****************************************************
+%Pour les colles
+%****************************************************
+
+%#1: Commentaire en rouge
+\newcommand{\QC}[1]{\par\vspace{5mm}\textbf{{\large \setlength{\fboxsep}{1.5mm}\setlength{\fboxrule}{1mm}\Ovalbox{Question de cours:}~~}~\Red{#1}} \par  \vspace{2mm} \par}
+
+
+%#1: Commentaire en rouge
+\newcommand{\exocolpasnum}[1]{\par\vspace{5mm}\textbf{{\large\setlength{\fboxsep}{1.5mm}\setlength{\fboxrule}{1mm} \Ovalbox{Exercice~:}~~}~\Red{#1} } \par  \vspace{2mm} \par}
+\newcounter{exocol}
+\newcommand{\exocolnum}[1]{
+\stepcounter{exocol}
+\par\vspace{5mm}\textbf{{\large\setlength{\fboxsep}{1.5mm}\setlength{\fboxrule}{1mm} \Ovalbox{Exercice~\arabic{exocol} :}~~}~\Red{#1} } \par  \vspace{2mm} \par}
+
+\makeatletter
+\newcommand{\exocol}{\@ifstar{\exocolpasnum}{\exocolnum}}
+\makeatother
+
+
+%Pour séparer les planches sur la page
+\newcommand{\trait}{\vspace{4mm}
+\hrule\hrule\setcounter{exocol}{0}
+\vspace{4mm}}
+
+%Pour écrire le nom des étudiants
+%#1: le nom
+%#2: la note en rouge
+\newcommand{\Nom}[2]{\textbf{{\Large\underline{#1:}~~\Red{#2/20}}}}
+
+
+
+
+
+%****************************************************
+% Exercices 
+%****************************************************
+
+% #1: Titre eventuel
+
+\newcounter{exo}
+\newcommand{\exo}[1]{\par\vspace{5mm}\setcounter{probpart}{0}\stepcounter{exo}\setlength{\fboxrule}{1pt} \fbox{\textbf{Exercice~\arabic{exo}}} \textbf{#1}\par  \vspace{3mm} \par}
+
+
+%****************************************************
+% Exercices dans les ds
+%****************************************************
+
+% #1 : barême
+% #2 : titre éventuel
+
+\newcounter{exods}
+\newcommand{\exods}[2]{\par\vspace{6mm}\setcounter{probpart}{0}
+\stepcounter{exods}{\textbf{\large Exercice~\arabic{exods}} :} {\textbf{ (#1 points) #2}}\par \vspace{3mm}
+\par}
+
+%****************************************************
+% Partie dans les problèmes
+%****************************************************
+
+    \newcounter{probpart}%[exods]%[exo]
+    \newcommand{\probpart}[1]{
+    \stepcounter{probpart}
+    \begin{center}
+    \textbf{ \Partie~\Alph{probpart} #1}
+    \end{center}}
+
+%****************************************************
+% Corrections...
+%****************************************************
+
+
+% Pour afficher la réponse des exos en modifiant le booléen reponse de true à false.
+\newboolean{reponse}
+\setboolean{reponse}{false}
+\newcommand{\rep}[2]{%
+\ifthenelse{\boolean{reponse}}{\par \emph{#2}}{#1}
+}
+
+
+% Corrigé
+\newcommand{\corrige}{\fontfamily{cmss} \selectfont}
+ % Corrigé d'un exercice
+\newcommand{\corrigex}[1]{\fontfamily{cmss} \selectfont
+{\bf Corrigé :}
+#1
+\begin{center}\rule{10cm}{0.5pt}\end{center}
+
+\fontfamily{cm} \selectfont
+
+}
+
+%****************************************************
+%remise a zéro de tous les compteurs
+%****************************************************
+
+\newcommand{\raz}{
+\setcounter{exo}{0}
+\setcounter{exods}{0}
+\setcounter{footnote}{0}
+\setcounter{probpart}{0}
+\setcounter{exocol}{0}
+}
+
+%****************************************************
+% Divers
+%****************************************************
+
+% utile pour dupliquer des parties
+\newcommand{\double}[1]{#1 \par \newpage \raz #1}
+
+%titre fond noir ecrit en blanc
+\newcommand{\sectionblack}[1]{\begin{center}
+\begin{tabularx}{\textwidth}{X} 
+\rowcolor{black}\centering\large\bf \white #1 \rule{0pt}{15pt}
+\end{tabularx}
+\end{center}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%            COMMANDES COURS 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%****************************************************
+%%%% Pour avoir une barre verticale à gauche
+%****************************************************
+%#1 Espace à gauche de la barre (optionnel)
+%#2 Couleur de la barre
+%#3 Espace à droite de la barre (optionnel)
+\NewDocumentEnvironment{BarreVerticale}{O{17.7pt} m O{15pt} }{%
+    \begin{mdframed}[usetwoside=false, skipabove=1ex,%
+                    leftmargin=#1, innerleftmargin=#3,%
+                    topline=false, rightline=false,%
+                    bottomline=false, leftline=true,%
+                    linewidth=1.5pt, linecolor=#2]%
+                    }%
+   {\end{mdframed}}
+
+
+
+
+
+%-----------------------------------------------------
+%Attention
+%-----------------------------------------------------
+\newcommand{\attention}[1]{%
+	\hspace*{-6.232125mm}%
+	\begin{tikzpicture}%
+		\draw[line width=1mm,%
+			red,rounded corners=1pt]%
+			(-1,-1) -- (0.2,-1) -- ++(120:1.2) --cycle;
+		\node[above] at (-0.4,-1){ {\huge\textbf{!}}};
+		\node at (2.3,-0.50) {\textcolor{red}%
+			{\textbf{ \setlength{\fboxrule}{1.5pt}%
+			\fbox{\textcolor{black}{ATTENTION~:}}}}};
+	\end{tikzpicture}\\[-5mm]
+	\begin{tcolorbox}[blanker,left=1ex,%
+        			borderline west={1.5pt}{0mm}{red},
+        			breakable]
+         \strut#1
+	\end{tcolorbox}
+}
+
+
+                
+                
+ %********************** Barre verticale à gauche **********************
+% #1 Pour chrger des options (compteurs par exple)
+% #2 Nom de la commande
+% #3 Titre
+% #4 Couleur de la barre et du titre
+
+%**********************************************************************
+\newcommand{\BarreVerticaleTheoreme}[4][]{%
+	\newtcbtheorem[#1]{barre#2}{#3}{before=\hspace{2ex},blanker,left=1ex,%
+        			 separator sign={~:~~},fonttitle=\bfseries,%
+        			 boxsep=3pt,borderline west={1.5pt}{0pt}{#4},%
+        			 coltitle=#4,breakable,%
+        			 attach boxed title to top left={xshift=-7mm,%
+        			 								yshift=0pt,yshifttext=0mm},%
+        			 %before=\hspace{2ex},
+        			 				}{mes#2}%
+	\NewDocumentEnvironment{#2}{ O{} O{} O{}}%
+             {\begin{barre#2}[##3]{##1}{##2}}%
+             {\end{barre#2}}%
+     \NewDocumentEnvironment{#2*}{O{} O{} O{}}%
+             {\begin{barre#2*}[##3]{##1}{##2}}%
+             {\end{barre#2*}}%
+}               
+
+
+
+%****************** Les commandes avec barre à gauche *****************
+
+%-------- Exemple unique ----------
+\newcounter{CompteurExemple}
+\BarreVerticaleTheoreme[use counter=CompteurExemple]{Exemple}{Exemple}{CouleurExemple}
+\newcommand{\exemple}[2][]{%
+	\begin{Exemple*}[#1]
+		#2
+	\end{Exemple*}
+}
+
+%------- Exemples en liste (le enumerate n'est pas inclus) ------------
+\BarreVerticaleTheoreme[use counter=CompteurExemple]{Exemples}{Exemples}{CouleurExemple}
+\newcommand{\exemples}[2][]{%
+	\begin{Exemples*}[#1]
+		#2
+	\end{Exemples*}
+}
+
+%--------- Remarque unique ---------
+\BarreVerticaleTheoreme{Remarque}{Remarque}{CouleurRemarque}
+\newcommand{\remarque}[2][]{%
+	\begin{Remarque*}[#1]
+		#2
+	\end{Remarque*}
+}
+
+%--------- Remarques en liste (le enumerate n'est pas inclus) ---------
+\BarreVerticaleTheoreme{Remarques}{Remarques}{CouleurRemarque}
+\newcommand{\remarques}[2][]{%
+	\begin{Remarques*}[#1]
+		#2
+	\end{Remarques*}
+}	
+
+%--------- Rappel ---------
+\BarreVerticaleTheoreme{Rappel}{Rappel}{CouleurRappel}
+\newcommand{\rappel}[2][]{%
+	\begin{Rappel*}[#1]
+		#2
+	\end{Rappel*}
+}
+
+%--------- Rappels ---------
+\BarreVerticaleTheoreme{Rappels}{Rappels}{CouleurRappel}
+\newcommand{\rappels}[2][]{%
+	\begin{Rappels*}[#1]
+		#2
+	\end{Rappels*}
+}
+
+%---------- Méthode -----------
+\BarreVerticaleTheoreme{Methode}{Méthode}{CouleurMethode}
+\newcommand{\methode}[2][]{%
+	\begin{Methode*}[#1]
+		#2
+	\end{Methode*}
+}
+
+%---------- Savoir-faire --------
+\BarreVerticaleTheoreme{SavoirFaire}{Savoir-faire}{CouleurSavoirFaire}
+\newcommand{\savoirfaire}[2][]{%
+	\begin{SavoirFaire*}[#1]
+		#2
+	\end{SavoirFaire*}
+}
+
+%-------Vocabulaire ----------
+\BarreVerticaleTheoreme{Vocabulaire}{Vocabulaire}{CouleurVocabulaire}
+\newcommand{\vocabulaire}[2][]{%
+	\begin{Vocabulaire*}[#1]
+		#2
+	\end{Vocabulaire*}
+}
+
+
+%------ Notation ---------
+\BarreVerticaleTheoreme{Notation}{Notation}{CouleurNotation}
+\newcommand{\notation}[2][]{%
+	\begin{Notation*}[#1]
+		#2
+	\end{Notation*}
+}
+
+%------ Notation ---------
+\BarreVerticaleTheoreme{Notations}{Notations}{CouleurNotation}
+\newcommand{\notations}[2][]{%
+	\begin{Notations*}[#1]
+		#2
+	\end{Notations*}
+}
+
+%-------- Règle ----------
+\BarreVerticaleTheoreme{Regle}{Règle}{CouleurRegle}
+\newcommand{\regle}[2][]{%
+	\begin{Regle*}[#1]
+		#2
+	\end{Regle*}
+}
+
+%-------- Démonstration avec barre à gauche ----------
+\BarreVerticaleTheoreme{Demo}{Démonstration}{CouleurPreuve}
+\newcommand{\demo}[2][]{%
+	\begin{Demo*}[#1]
+		#2
+	\end{Demo*}
+}
+
+
+%-------- Graphiquement avec barre à gauche ----------
+\BarreVerticaleTheoreme{Graphiquement}{Interprétation graphique}{CouleurGraphiquement}
+\newcommand{\graphiquement}[2][]{%
+	\begin{Graphiquement*}[#1]
+		#2
+	\end{Graphiquement*}
+}
+                         	
+                         	
+%--------- Alternative : modification de la commande originelle ------
+\newenvironment{proof}{%
+	\begin{Demo*}
+}%
+{%
+    \end{Demo*}%
+}
+
+%****************************************************
+% Numéro de section dans la marge
+%****************************************************
+
+\makeatletter
+\def\section{\@ifstar\unnumberedsection\numberedsection}
+\def\numberedsection{\@ifnextchar[%]
+  \numberedsectionwithtwoarguments\numberedsectionwithoneargument}
+\def\unnumberedsection{\@ifnextchar[%]
+  \unnumberedsectionwithtwoarguments\unnumberedsectionwithoneargument}
+\def\numberedsectionwithoneargument#1{\numberedsectionwithtwoarguments[#1]{#1}}
+\def\unnumberedsectionwithoneargument#1{\unnumberedsectionwithtwoarguments[#1]{#1}}
+\def\numberedsectionwithtwoarguments[#1]#2{%
+  \ifhmode\par\fi
+  \removelastskip
+  \vskip 3ex\goodbreak
+  \refstepcounter{section}%
+           \hspace{-30pt}
+           \begin{tikzpicture}[node distance=0 cm]
+	    \node[fill=sectioncolor,rectangle,rounded corners=5pt,anchor=south west] (sectionnumber) at (0,0)
+	    {\bfseries\Large\textcolor{white}{\thesection.}};
+	    \node[anchor=south west] (sectiontitle) [right = of sectionnumber]
+	    {\bfseries\Large\textsc{#1}};
+	    \end{tikzpicture}
+	    %petite ligne en dessous
+	    \black \hspace{-30pt}\hrule height 1pt depth 0pt width \hsize \black
+   \vskip 4mm\nobreak
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}%
+  \ignorespaces
+  }
+\def\unnumberedsectionwithtwoarguments[#1]#2{%
+    \ifhmode\par\fi
+  \removelastskip
+  \vskip 3ex\goodbreak
+  \refstepcounter{section}%
+           \hspace{-30pt}
+           \begin{tikzpicture}[node distance=0 cm]
+	    \node[fill=sectioncolor,rectangle,rounded corners=5pt,anchor=south west] (sectionnumber) at (0,0)
+	    {\bfseries\Large\textcolor{white}{\thesection.}};
+	    \node[anchor=south west] (sectiontitle) [right = of sectionnumber]
+	    {\bfseries\Large\textsc{#1}};
+	    \end{tikzpicture}
+	    %petite ligne en dessous
+	    \black \hrule height 1pt depth 0pt width \hsize \black
+   \vskip 4mm\nobreak
+   \ignorespaces
+  }
+\makeatother
+
+%****************************************************
+% redefinition sous-subsection
+%****************************************************
+
+\makeatletter
+\def\subsection{\@ifstar\unnumberedsubsection\numberedsubsection}
+\def\numberedsubsection{\@ifnextchar[%]
+  \numberedsubsectionwithtwoarguments\numberedsubsectionwithoneargument}
+\def\unnumberedsubsection{\@ifnextchar[%]
+  \unnumberedsubsectionwithtwoarguments\unnumberedsubsectionwithoneargument}
+\def\numberedsubsectionwithoneargument#1{\numberedsubsectionwithtwoarguments[#1]{#1}}
+\def\unnumberedsubsectionwithoneargument#1{\unnumberedsubsectionwithtwoarguments[#1]{#1}}
+\def\numberedsubsectionwithtwoarguments[#1]#2{%
+  \ifhmode\par\fi
+  \removelastskip
+  \vskip 3ex\goodbreak
+  \refstepcounter{subsection}%
+            \begin{tikzpicture}[node distance=0 cm]
+	    \node[fill=subsectioncolor,rectangle,rounded corners=5pt,anchor=south west] (subsectionnumber) at (0,0)
+	    {\bfseries\large\textcolor{white}{\thesubsection.}};
+	    \node[anchor=south west] (subectiontitle) [right = of subsectionnumber]
+	    {\bfseries\large #1};
+	    \end{tikzpicture}
+	    %petite ligne en dessous
+	    \black \hrule height 1pt depth 0pt width \hsize \black
+  \vskip 4mm\nobreak
+  \addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#1}%
+  \ignorespaces
+  }
+\def\unnumberedsubsectionwithtwoarguments[#1]#2{%
+   \ifhmode\par\fi
+  \removelastskip
+  \vskip 3ex\goodbreak
+  \refstepcounter{subsection}%
+            \begin{tikzpicture}[node distance=0 cm]
+	    \node[fill=subsectioncolor,rectangle,rounded corners=5pt,anchor=south west] (subsectionnumber) at (0,0)
+	    {\bfseries\large\textcolor{white}{\thesubsection.}};
+	    \node[anchor=south west] (subectiontitle) [right = of subsectionnumber]
+	    {\bfseries\large #1};
+	    \end{tikzpicture}
+	    %petite ligne en dessous
+	    \black \hrule height 1pt depth 0pt width \hsize \black
+   \vskip 3mm\nobreak
+   \ignorespaces
+  }
+\makeatother
+
+%%****************************************************
+%%La commande qui fabrique les environnements
+%%****************************************************
+
+% #1: Le nom de l'environnement
+% #2: Le titre générique (Théorème, Définition...)
+% #3: La couleur du cadre
+% #4: La couleur du fond
+% #5: La couleur du titre
+\newcommand{\NouveauLatexTheoreme}[5]{%
+    \newtcbtheorem[]{theo#1}{#2}%
+         {enhanced,breakable,%
+         attach boxed title to top left={yshift=0.8pt,%
+                                         yshifttext=0mm},%
+         boxed title style={size=title,colframe=#3,arc=5.5pt},%
+         separator sign={~:},
+         colframe=#3,colback=#4,coltitle=#5,colbacktitle=#3,arc=5.5pt,%
+         title=#2,fonttitle=\bfseries, drop shadow,%
+         }{mes#1}
+     \NewDocumentEnvironment{#1}{ O{} O{} O{}}%
+             {\begin{theo#1}[##3]{##1}{##2}}%
+             {\end{theo#1}}%
+     \NewDocumentEnvironment{#1*}{O{} O{} O{}}%
+             {\begin{theo#1*}[##3]{##1}{##2}}%
+             {\end{theo#1*}}%
+}
+
+
+
+%%****************************************************
+%% Définitions
+%%****************************************************
+\NouveauLatexTheoreme{Definition}{Définition}{deficolor}{backdeficolor}{titlecolor}
+
+%%****************************************************
+%% Théorèmes
+%%****************************************************
+\NouveauLatexTheoreme{Theoreme}{Théorème}{theocolor}{backtheocolor}{titlecolor}
+
+%% Corollaire
+\NouveauLatexTheoreme{Corollaire}{Corollaire}{theocolor}{backtheocolor}{titlecolor}
+
+%%****************************************************
+%% Propositions et propriétés
+%%****************************************************
+
+% Proposition
+\NouveauLatexTheoreme{Proposition}{Proposition}{theocolor}{backtheocolor}{titlecolor}
+%
+%% Propriété
+\NouveauLatexTheoreme{Propriete}{Propriété}{theocolor}{backtheocolor}{titlecolor}
+
+%%****************************************************
+%% Exercices de cours
+%%****************************************************
+\NouveauLatexTheoreme{Exercice}{Exercice}{exoccolor}{backexoccolor}{titlecolor}
+
+
+%****************************************************
+% Encadrement générique
+%****************************************************
+
+%cadre sans titre
+% #1:(optionnel) Couleur du cadre
+\newtcolorbox{Encadre}[1][cadrecolor]{enhanced,breakable,%
+         colframe=#1,colback=#1!10,arc=5.5pt,%
+         drop shadow,%
+         }
+% version commande
+% #1 Couleur du cadre (optionnel)
+% #2 Contenu du cadre
+\newcommand{\encadre}[2][cadrecolor]{%
+    \begin{Encadre}[#1]%
+        #2
+    \end{Encadre}%
+}%
+
+
+
+%cadre avec titre
+% #1:(optionnel) Couleur du cadre
+% #2:Titre du cadre
+
+\newtcolorbox{Cadre}[2][cadrecolor]{enhanced,breakable,%
+         attach boxed title to top left={yshift=0.8pt,%
+                                         yshifttext=0mm},%
+         boxed title style={size=title,colframe=#1,arc=5.5pt},%
+         separator sign={~:},
+         colframe=#1,colback=#1!10,coltitle=titlecolor,colbacktitle=#1,arc=5.5pt,%
+         title=#2,fonttitle=\bfseries, drop shadow,%
+         }
+
+\newcommand{\cadre}[3][cadrecolor]{%
+    \begin{Cadre}[#1]{#2}%
+        #3
+    \end{Cadre}%
+}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%            MATHS EN ANGLAIS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%****************************************************
+%Drapeau anglais
+%****************************************************
+
+\newcommand{\ukflag}{
+\definecolor{flagred}{HTML}{CC0000}
+\definecolor{flagblue}{HTML}{000066}
+\begin{tikzpicture}[scale=0.15,rounded corners=0pt]
+\draw (0,0) -- (6,0) -- (6,3) -- (0,3) -- cycle;
+\fill[color=flagblue] (0,0) -- (6,0) -- (6,3) -- (0,3) -- cycle;
+\fill[color=white] (0,3) -- (0,2.7) -- (5.6,0) -- (6,0) -- (6,0.3) --
+(0.4,3) -- cycle;
+\fill[color=flagred] (0,3) -- (0,2.8) -- (6,0) -- (6,0.2) -- cycle;
+\fill[color=white] (0,0) -- (0,0.3) -- (5.4,3) -- (6,3) -- (6,2.7) --
+(0.6,0) -- cycle;
+\fill[color=flagred] (0,0) -- (0.4,0) -- (6,3) -- (5.6,3) -- cycle;
+\fill[color=white] (2.5,0) -- (2.5,1) -- (0,1) -- (0,2) -- (2.5,2) --
+(2.5,3) -- (3.5,3) -- (3.5,2) --
+(6,2) -- (6,1) -- (3.5,1) -- (3.5,0) -- cycle;
+\fill[color=flagred] (2.7,0) -- (2.7,1.2) -- (0,1.2) -- (0,1.8) --
+(2.7,1.8) -- (2.7,3) -- (3.3,3) -- (3.3,1.8) --
+(6,1.8) -- (6,1.2) -- (3.3,1.2) -- (3.3,0) -- cycle;
+\end{tikzpicture}
+}
+
+%****************************************************
+% En anglais
+%****************************************************
+
+\newcommand{\eng}[2]{\begin{tikzpicture}% #1:titre en gras, #2: texte
+\node[rectangle,text justified,fill=engcolor,text width=\columnwidth-12pt,rounded corners=5pt]
+{\ukflag \raisebox{2pt}{\textbf{#1}}\\
+#2};
+\end{tikzpicture}
+}
+
+
+
+
+\newtcblisting{test-python}{%
+   listing options=%
+      {upquote          = true,                         
+       breaklines       = true,
+       showstringspaces = false, 
+       numbers          = left,
+       stepnumber       = 1,
+       numberstyle      = \tiny,
+       numbersep        = 10pt,                         
+       keywordstyle     = \color{Violet},
+       columns          = flexible,
+       basicstyle       = \ttfamily,
+       language         = {Python},
+       commentstyle     = \color{Gris},
+       stringstyle      = \color{BleuFonce},
+       identifierstyle  = \color{VertFonce},
+       tabsize          = 3,
+      },%
+   colback       = GrisClair!50,
+   colframe      = GrisClair!50,
+   boxrule       = 2pt,
+   shadow        = {1.5mm}{-1.5mm}{0mm}{gray!75!white},
+   left          = 5mm,enhanced,
+   arc           = 5.5pt,
+   sharp corners = all,
+   listing only
+}
